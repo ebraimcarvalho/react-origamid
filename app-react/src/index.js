@@ -5,8 +5,8 @@ import Props from './Props';
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <App /> */}
-    <Props />
+    <App />
+    {/* <Props /> */}
   </React.StrictMode>,
   document.getElementById('root'),
 );
