@@ -15,10 +15,8 @@ const App = () => {
     inputElement.current.focus();
   }
 
-  function handleDelete(item) {
+  function handleDelete(index) {
     const newArr = [...comentarios];
-    const index = newArr.indexOf(item);
-    console.log(item, index);
     newArr.splice(index, 1);
     setComentarios(newArr);
   }
@@ -35,9 +33,10 @@ const App = () => {
   return (
     <div>
       <ul>
-        {comentarios.map((item) => (
-          <li key={item}>
-            {item} - <button onClick={() => handleDelete(item)}>Excluir</button>
+        {comentarios.map((item, index) => (
+          <li key={index}>
+            {item} -{" "}
+            <button onClick={() => handleDelete(index)}>Excluir</button>
           </li>
         ))}
       </ul>
