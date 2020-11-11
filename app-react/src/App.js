@@ -2,43 +2,35 @@ import React from "react";
 import Produtos from "./components/Produtos/Produtos";
 
 const App = () => {
-  const [dados, setDados] = React.useState(null);
-  const [carregando, setCarregando] = React.useState(null);
+  const [produto, setProduto] = React.useState(null);
 
-  async function handleClick(event) {
-    setCarregando(true);
-    const response = await fetch(
-      "https://ranekapi.origamid.dev/json/api/produto/" +
-        event.target.innerText.toLowerCase()
-    );
-    const json = await response.json();
-    setDados(json);
-    setCarregando(false);
+  React.useEffect(() => {
+    const produtoLocal = window.localStorage.getItem("item");
+    if (produtoLocal) setProduto(produtoLocal);
+  }, []);
 
-    // setCarregando(true);
-    // fetch(
-    //   "https://ranekapi.origamid.dev/json/api/produto/" +
-    //     event.target.innerText.toLowerCase()
-    // )
-    //   .then((response) => response.json())
-    //   .then((json) => {
-    //     console.log(json);
-    //     setDados(json);
-    //     console.log(dados);
-    //   });
-    // setCarregando(false);
+  React.useEffect(() => {
+    if (produto) window.localStorage.setItem("item", produto);
+  }, [produto]);
+
+  function handleClick(event) {
+    setProduto(event.target.innerText);
   }
 
   return (
     <div>
-      <button onClick={handleClick}>Tablet</button>
-      <button onClick={handleClick}>Smartphone</button>
-      <button onClick={handleClick}>Notebook</button>
+      <h3>Preferência: {produto}</h3>
+      <button style={{ margin: "1rem" }} onClick={handleClick}>
+        Tablet
+      </button>
+      <button style={{ margin: "1rem" }} onClick={handleClick}>
+        Smartphone
+      </button>
+      <button style={{ margin: "1rem" }} onClick={handleClick}>
+        Notebook
+      </button>
 
-      <div>
-        {carregando && <p>Carregando...</p>}
-        {!carregando && dados && <Produtos dados={dados} />}
-      </div>
+      <div>{produto && <Produtos produto={produto} />}</div>
     </div>
   );
 };
