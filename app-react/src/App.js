@@ -1,56 +1,58 @@
 import React from "react";
 
+const set1 = new Set();
+const set2 = new Set();
+
+function oplenta() {
+  let c;
+  for (let i = 0; i < 100000000; i++) {
+    c = i + i / 10;
+  }
+  return c;
+}
+
+const Produto = () => {
+  const func1 = () => {
+    console.log("Func 1");
+  };
+
+  const func2 = React.useCallback(() => {
+    console.log("Funco 2");
+  }, []);
+
+  set1.add(func1);
+  set2.add(func2);
+
+  console.log("Set1:", set1);
+  console.log("Set2:", set2);
+  return (
+    <div>
+      <p onClick={func1}>Produto 1</p>
+      <p onClick={func2}>Produto 2</p>
+    </div>
+  );
+};
+
 const App = () => {
-  const [comentarios, setComentarios] = React.useState([]);
-  const [input, setInput] = React.useState("");
-  const inputElement = React.useRef();
-
-  const [notificacao, setNotificacao] = React.useState(null);
   const [contador, setContador] = React.useState(0);
-  const timeout = React.useRef();
-
-  function handleClick() {
-    setComentarios([...comentarios, input]);
-    setInput("");
-    inputElement.current.focus();
-  }
-
-  function handleDelete(index) {
-    const newArr = [...comentarios];
-    newArr.splice(index, 1);
-    setComentarios(newArr);
-  }
-
-  function handleContador() {
-    setNotificacao("Agradecemos a compra!");
-    clearTimeout(timeout.current);
-    timeout.current = setTimeout(() => {
-      setNotificacao(null);
-    }, 1000);
-    setContador(contador + 1);
-  }
+  const ts = React.useMemo(() => {
+    const n = 5;
+    console.log(n);
+    return n + 1;
+  }, []);
+  const t1 = performance.now();
+  const valor = React.useMemo(() => {
+    return oplenta();
+  }, []);
+  console.log(performance.now() - t1);
 
   return (
     <div>
-      <ul>
-        {comentarios.map((item, index) => (
-          <li key={index}>
-            {item} -{" "}
-            <button onClick={() => handleDelete(index)}>Excluir</button>
-          </li>
-        ))}
-      </ul>
-      <input
-        ref={inputElement}
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        type="text"
-      />
-      <br />
-      <button onClick={handleClick}>Enviar</button>
+      <p>Teste</p>
+      <button onClick={() => setContador(contador + 1)}>{contador}</button>
+      <p>TS: {ts}</p>
       <hr />
-      <p>{notificacao}</p>
-      <button onClick={handleContador}>{contador}</button>
+      <Produto />
     </div>
   );
 };
