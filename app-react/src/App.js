@@ -1,12 +1,14 @@
 import React from "react";
-import { GlobalStorage } from "./GlobalContext";
-import Produto from "./Produto";
+import { StorageGlobal } from "./ContextGlobal";
+import Items from "./Items";
+import Limpar from "./Limpar";
 
 const App = () => {
   return (
-    <GlobalStorage>
-      <Produto />
-    </GlobalStorage>
+    <StorageGlobal>
+      <Items />
+      <Limpar />
+    </StorageGlobal>
   );
 };
 
