@@ -1,36 +1,57 @@
 import React from "react";
-import Produtos from "./components/Produtos/Produtos";
 
 const App = () => {
-  const [produto, setProduto] = React.useState(null);
+  const [comentarios, setComentarios] = React.useState([]);
+  const [input, setInput] = React.useState("");
+  const inputElement = React.useRef();
 
-  React.useEffect(() => {
-    const produtoLocal = window.localStorage.getItem("item");
-    if (produtoLocal) setProduto(produtoLocal);
-  }, []);
+  const [notificacao, setNotificacao] = React.useState(null);
+  const [contador, setContador] = React.useState(0);
+  const timeout = React.useRef();
 
-  React.useEffect(() => {
-    if (produto) window.localStorage.setItem("item", produto);
-  }, [produto]);
+  function handleClick() {
+    setComentarios([...comentarios, input]);
+    setInput("");
+    inputElement.current.focus();
+  }
 
-  function handleClick(event) {
-    setProduto(event.target.innerText);
+  function handleDelete(item) {
+    const newArr = [...comentarios];
+    const index = newArr.indexOf(item);
+    console.log(item, index);
+    newArr.splice(index, 1);
+    setComentarios(newArr);
+  }
+
+  function handleContador() {
+    setNotificacao("Agradecemos a compra!");
+    clearTimeout(timeout.current);
+    timeout.current = setTimeout(() => {
+      setNotificacao(null);
+    }, 1000);
+    setContador(contador + 1);
   }
 
   return (
     <div>
-      <h3>Preferência: {produto}</h3>
-      <button style={{ margin: "1rem" }} onClick={handleClick}>
-        Tablet
-      </button>
-      <button style={{ margin: "1rem" }} onClick={handleClick}>
-        Smartphone
-      </button>
-      <button style={{ margin: "1rem" }} onClick={handleClick}>
-        Notebook
-      </button>
-
-      <div>{produto && <Produtos produto={produto} />}</div>
+      <ul>
+        {comentarios.map((item) => (
+          <li key={item}>
+            {item} - <button onClick={() => handleDelete(item)}>Excluir</button>
+          </li>
+        ))}
+      </ul>
+      <input
+        ref={inputElement}
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        type="text"
+      />
+      <br />
+      <button onClick={handleClick}>Enviar</button>
+      <hr />
+      <p>{notificacao}</p>
+      <button onClick={handleContador}>{contador}</button>
     </div>
   );
 };
