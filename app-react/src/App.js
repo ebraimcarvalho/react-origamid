@@ -1,153 +1,112 @@
 import React from "react";
 
-const formFields = [
-  {
-    id: "nome",
-    label: "Nome",
-    type: "text",
-  },
-  {
-    id: "email",
-    label: "Email",
-    type: "email",
-  },
-  {
-    id: "senha",
-    label: "Senha",
-    type: "password",
-  },
-  {
-    id: "cep",
-    label: "Cep",
-    type: "text",
-  },
-  {
-    id: "rua",
-    label: "Rua",
-    type: "text",
-  },
-  {
-    id: "numero",
-    label: "Número",
-    type: "text",
-  },
-  {
-    id: "bairro",
-    label: "Bairro",
-    type: "text",
-  },
-  {
-    id: "cidade",
-    label: "Cidade",
-    type: "text",
-  },
-  {
-    id: "estado",
-    label: "Estado",
-    type: "text",
-  },
-];
-
 const App = () => {
-  const [form, setForm] = React.useState(
-    formFields.reduce((acc, field) => {
-      return { ...acc, [field.id]: "" };
-    }, {})
-  );
-
-  const [response, setResponse] = React.useState(null);
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    fetch("https://ranekapi.origamid.dev/json/api/usuario", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    }).then((response) => {
-      setResponse(response);
-    });
-  }
+  const [mensagem, setMensagem] = React.useState("");
+  const [select, setSelect] = React.useState("");
+  const [produto, setProduto] = React.useState("");
+  const [cor, setCor] = React.useState("");
+  const [cores, setCores] = React.useState([]);
 
   function handleChange({ target }) {
-    const { id, value } = target;
-    setForm({ ...form, [id]: value });
+    if (target.checked) {
+      setCores([...cores, target.value]);
+    } else {
+      setCores(cores.filter((cor) => cor !== target.value));
+    }
+  }
+
+  function handleCheck(cor) {
+    return cores.includes(cor);
   }
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        {formFields.map(({ id, label, type }) => (
-          <div key={id}>
-            <label htmlFor={id}>{label}</label>
-            <input
-              type={type}
-              id={id}
-              value={form[id]}
-              onChange={handleChange}
-            />
-          </div>
-        ))}
+    <div>
+      <p>Textarea</p>
+      <form>
+        <label htmlFor="textarea">Mensagem</label>
+        <textarea
+          name="textarea"
+          id="textarea"
+          cols="10"
+          rows="5"
+          onChange={(e) => setMensagem(e.target.value)}
+        ></textarea>
+        <select value={select} onChange={(e) => setSelect(e.target.value)}>
+          <option value="" disabled>
+            Selecione uma opção
+          </option>
+          <option value="notebook">Notebook</option>
+          <option value="desktop">Desktop</option>
+          <option value="ps5">PS5</option>
+        </select>
+        <h3>Dispositivo</h3>
+        <label>
+          <input
+            type="radio"
+            value="notebook"
+            name="produto"
+            onChange={({ target }) => setProduto(target.value)}
+          />
+          Notebook
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="desktop"
+            name="produto"
+            onChange={({ target }) => setProduto(target.value)}
+          />
+          Desktop
+        </label>
 
-        {/* <label htmlFor="nome">Nome</label>
-        <input
-          type="text"
-          id="nome"
-          value={form.nome}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          value={form.email}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="senha">Senha</label>
-        <input
-          type="password"
-          id="senha"
-          value={form.senha}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="cep">Cep</label>
-        <input type="text" id="cep" value={form.cep} onChange={handleChange} />
-
-        <label htmlFor="rua">Rua</label>
-        <input type="text" id="rua" value={form.rua} onChange={handleChange} />
-
-        <label htmlFor="numero">Número</label>
-        <input
-          type="text"
-          id="numero"
-          value={form.numero}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="bairro">Bairro</label>
-        <input
-          type="text"
-          id="bairro"
-          value={form.bairro}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="cidade">Cidade</label>
-        <input
-          type="text"
-          id="cidade"
-          value={form.cidade}
-          onChange={handleChange}
-        /> */}
-
-        {response && response.ok && <p>Usuário Criado com sucesso</p>}
-        <button>Enviar Dados</button>
+        <h3>Cor</h3>
+        <label>
+          <input
+            type="radio"
+            value="preto"
+            checked={cor === "preto"}
+            onChange={({ target }) => setCor(target.value)}
+          />
+          Preto
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="branco"
+            checked={cor === "branco"}
+            onChange={({ target }) => setCor(target.value)}
+          />
+          Branco
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            value="amarelo"
+            checked={handleCheck("amarelo")}
+            onChange={handleChange}
+          />
+          Amarelo
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            value="azul"
+            checked={handleCheck("azul")}
+            onChange={handleChange}
+          />
+          Azul
+        </label>
       </form>
-    </>
+      <p>Mensagem: {mensagem.toUpperCase()}</p>
+      <p>Opção selecionada: {select}</p>
+      <p>Dispositivo: {produto}</p>
+      <p>Cor: {cor}</p>
+      <ul>
+        {cores.map((cor) => (
+          <li key={cor}>{cor}</li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
